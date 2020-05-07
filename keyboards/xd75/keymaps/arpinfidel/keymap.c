@@ -20,6 +20,7 @@
 #define _FN 1
 
 bool BL_MOD_ON = false;
+bool CAPS_ON = false;
 
 enum my_kc {
 	A_BL_TG = SAFE_RANGE,
@@ -69,8 +70,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	{ KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   RGB_HUD, RESET  , RGB_HUI, KC_F7,   KC_F8,   KC_F9,   KC_F10  , KC_F11 , KC_F12   },
 	{ KC_WH_U, KC_WH_L, KC_WH_R, KC_MS_U, KC_BTN1, KC_BTN2, RGB_SAD, _______, RGB_SAI, KC_LBRC, KC_RBRC, KC_UP  , _______ , KC_EQL , KC_BSLS  },
 	{ KC_WH_D, _______, KC_MS_L, KC_MS_D, KC_MS_R, KC_BTN3, RGB_VAD, _______, RGB_VAI, KC_MINS, KC_LEFT, KC_DOWN, KC_RIGHT, _______, _______  },
-	{ _______, _______, _______, _______, _______, _______, RGB_RMOD,_______, RGB_MOD, _______, _______, _______, _______ , _______, _______  },
-	{ _______, TT(_FN), RGB_TOG, _______, _______, _______, A_BL_TG, TT(_FN), A_BL_MD, KC_BTN1, KC_BTN2, _______, _______ , TT(_FN), _______  },}
+	{ _______, _______, _______, _______, _______, _______, RGB_RMOD,A_BL_MD, RGB_MOD, _______, _______, _______, _______ , _______, _______  },
+	{ _______, TT(_FN), RGB_TOG, _______, _______, _______, BL_DEC , TT(_FN), BL_INC , KC_BTN1, KC_BTN2, _______, _______ , TT(_FN), _______  },}
 };
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -91,12 +92,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 	}
 }
 
-void led_set_user(uint8_t usb_led) {
-	if (BL_MOD_ON && usb_led & (1<<USB_LED_CAPS_LOCK)) {
-		capslock_led_on();
-	} else {
+void matrix_scan_user(void) {
+	if (!CAPS_ON) {
 		capslock_led_off();
-	}
+    }
+}
+
+void led_set_user(uint8_t usb_led) {
+	// if (BL_MOD_ON && usb_led & (1<<USB_LED_CAPS_LOCK)) {
+	// 	capslock_led_on();
+	// } else {
+	// 	capslock_led_off();
+	// }
+}
+
+bool led_update_user(led_t led_state) {
+    writePin(B2, !led_state.caps_lock);
+    CAPS_ON = !led_state.caps_lock;
+    return true;
 }
 
 // Runs whenever there is a layer state change.

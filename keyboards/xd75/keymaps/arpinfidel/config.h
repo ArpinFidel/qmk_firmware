@@ -17,6 +17,9 @@
 #pragma once
 
 // place overrides here
+
+// #define BACKLIGHT_CAPS_LOCK 2
+
 #define TAPPING_TOGGLE 2
 
 #define MOUSEKEY_DELAY 0
