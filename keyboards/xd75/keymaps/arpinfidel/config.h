@@ -18,7 +18,9 @@
 
 // place overrides here
 
-// #define BACKLIGHT_CAPS_LOCK 2
+#define BACKLIGHT_LED_COUNT 4
+#undef BACKLIGHT_PIN
+#define BACKLIGHT_PINS { F5, B2, F4, F7 }
 
 #define TAPPING_TOGGLE 2
 
